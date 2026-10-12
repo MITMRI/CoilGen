@@ -1,0 +1,15 @@
+Current: 3.80 A (J1 F.Cu in -> J2 B.Cu out)
+Gradient dBx/dz at centre: FEM 27.574 mT/m, Biot-Savart 27.604 mT/m
+Efficiency: 7.256 mT/m/A (FEM), 7.264 mT/m/A (BS)
+Least-squares gradient over DSV: 26.705 mT/m
+Bx at DSV ends (axis, z = +/-20 mm): +0.5393 / -0.5365 mT
+DSV non-linearity vs centre gradient: max 11.23 %, RMS 2.16 %
+DSV non-linearity (Biot-Savart): max 4.38 %, RMS 0.48 %
+Least-squares gradient over DSV (Biot-Savart): 27.563 mT/m
+Max |By|, |Bz| in DSV: FEM 0.0873, 0.5465 mT; Biot-Savart 0.0793, 0.5544 mT
+FEM vs Biot-Savart in DSV: median 2.149 %, max 9.062 % of max|Bx|
+Quadrant/layer contributions (mT/m), rows z>0, x>0 | z>0, x<0 | z<0, x>0 | z<0, x<0, cols F.Cu B.Cu:
+  +3.304 +3.643
+  +3.743 +3.079
+  +3.962 +3.372
+  +3.027 +3.474

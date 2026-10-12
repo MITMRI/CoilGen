@@ -1,0 +1,25 @@
+WARNING: package sun.awt.X11 not in java.desktop
+WARNING: package sun.awt.X11 not in java.desktop
+mesh: 9015 nodes, 52626 elements (linear)
+solved in 128.4 s
+Biot-Savart: 72.5 s
+saved
+      507.17 real      1418.20 user        26.75 sys
+          4073013248  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+             1044497  page reclaims
+                5089  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                2972  messages sent
+                3263  messages received
+                  47  signals received
+               28577  voluntary context switches
+             3273623  involuntary context switches
+      13205763929768  instructions retired
+       4740664265465  cycles elapsed
+          5415147832  peak memory footprint
+EXIT 0
