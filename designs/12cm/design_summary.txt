@@ -1,0 +1,42 @@
+12 cm Halbach gradient set: 14 AWG heavy build magnet wire, 0.8 mm plastic between wires
+Magnet frame: x = B0, z = bore. All lengths in mm. Copper at 20 C unless noted.
+
+Z coil (Z_L330_AWG14_lin300)
+  former: inner radius 66, outer radius 70 (ID 132 / OD 140), length 330
+  wire: AWG14, max outer diameter 1.732, bare 1.628, pitch min 2.53
+  wire centre radius 69.13 (diameter 138.27), groove depth 1.73 (wire flush with the surface)
+  crossings: 7, wire centre 2.03 deeper there (groove depth 3.82, 0.18 plastic left inside)
+  wire extent along z: -161.3 to 160.8
+  terminals: start (69.1, -0.5, 160.7), end (69.1, 1.2, 160.7), 1.7 apart
+  turns (contour levels) 38, wire length 29.0 m (+ leads)
+  efficiency 1.942 mT/m/A, 3.96 mT/m per sqrt(W)
+  R 0.241 ohm at 20 C, 0.297 ohm at 80 C, L 153 uH
+  closest approach of two wire parts 1.74 centre to centre
+  max nonlinearity on the 120 mm sphere 4.41 %
+
+Y coil (Y_L324_AWG14_lin100)
+  former: inner radius 71, outer radius 75 (ID 142 / OD 150), length 324
+  wire: AWG14, max outer diameter 1.732, bare 1.628, pitch min 2.53
+  wire centre radius 74.13 (diameter 148.27), groove depth 1.73 (wire flush with the surface)
+  crossings: 15, wire centre 2.03 deeper there (groove depth 3.82, 0.18 plastic left inside)
+  wire extent along z: -154.7 to 154.7
+  terminals: start (51.5, 53.3, 154.7), end (53.8, 50.9, 154.7), 3.2 apart (moved to the +z end; the old cut is closed by a 5.9 mm jumper)
+  turns (contour levels) 28, wire length 29.5 m (+ leads)
+  efficiency 3.063 mT/m/A, 6.20 mT/m per sqrt(W)
+  R 0.244 ohm at 20 C, 0.302 ohm at 80 C, L 153 uH
+  closest approach of two wire parts 2.03 centre to centre
+  max nonlinearity on the 120 mm sphere 1.02 %
+
+X coil (X_L318_AWG14_lin020)
+  former: inner radius 76, outer radius 81 (ID 152 / OD 162), length 318
+  wire: AWG14, max outer diameter 1.732, bare 1.628, pitch min 2.53
+  wire centre radius 80.13 (diameter 160.27), groove depth 1.73 (wire flush with the surface)
+  crossings: 7, wire centre 2.03 deeper there (groove depth 3.82, 1.18 plastic left inside)
+  wire extent along z: -154.9 to 155.0
+  terminals: start (-1.4, 80.1, 154.9), end (2.2, 80.0, 154.9), 3.6 apart (moved to the +z end; the old cut is closed by a 6.3 mm jumper)
+  turns (contour levels) 30, wire length 37.4 m (+ leads)
+  efficiency 3.159 mT/m/A, 5.68 mT/m per sqrt(W)
+  R 0.309 ohm at 20 C, 0.382 ohm at 80 C, L 237 uH
+  closest approach of two wire parts 2.02 centre to centre
+  max nonlinearity on the 120 mm sphere 0.53 %
+
