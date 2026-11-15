@@ -45,7 +45,7 @@ end
 
 %detect wire crossings
 %[cross_segments,~]=self_intersect_iterative(wire_path_out.uv);
-[cross_points,cross_segments] = InterX(wire_path_out.uv);
+[cross_points,cross_segments] = find_track_crossings(wire_path_out.uv);
 
 % %Add the cross points to the wire track
 % cross_pair_inds=zeros(size(cross_segments));
@@ -176,6 +176,31 @@ end
 
 
 %%%%%  subfunctions  %%%%%%
+function [P,intersect_edge_inds] = find_track_crossings(L)
+%Self crossings of a track (2xN) with the outputs of InterX. Only segments
+%that are close to each other are compared, so long tracks need no NxN matrices.
+A=L(:,1:end-1); B=L(:,2:end); len=vecnorm(B-A);
+num_seg=size(A,2);
+mid=((A+B)/2)';
+neighbours=rangesearch(mid,mid,max(len)*1.01);
+num_near=cellfun(@numel,neighbours);
+i=repelem((1:num_seg)',num_near);
+j=[neighbours{:}]'; 
+keep=j>i+1; i=i(keep); j=j(keep);
+d1=B(:,i)-A(:,i); d2=B(:,j)-A(:,j); w=A(:,j)-A(:,i);
+den=d1(1,:).*d2(2,:)-d1(2,:).*d2(1,:);
+t=(w(1,:).*d2(2,:)-w(2,:).*d2(1,:))./den;
+u=(w(1,:).*d1(2,:)-w(2,:).*d1(1,:))./den;
+hit=den~=0 & t>0 & t<1 & u>0 & u<1;
+intersect_edge_inds=[i(hit) j(hit)];
+if isempty(intersect_edge_inds)
+intersect_edge_inds=[];
+P=zeros(2,0);
+else
+P=A(:,i(hit))+d1(:,hit).*t(hit);
+end
+end
+
 function points_in = equilze_point_distances(points_in,maximal_distance)
 %limit the point to point distane in the 2d representation
 zzzz=0;

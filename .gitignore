@@ -10,3 +10,6 @@ _autosave-*
 
 # Python environment for the rolled STEP models (sub_functions/rolled_flex_pcb_step.py)
 .venv/
+
+# MATLAB job logs of the wound coil runs
+Wound_gradient_coils/jobs.log
