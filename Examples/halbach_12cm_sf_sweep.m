@@ -1,7 +1,7 @@
 %Length study for the 3-axis gradient set of the 12 cm Halbach system:
 %one layer of round wire in grooves on the outside of three printed formers,
 %120 mm spherical imaging volume.
-%   Z (bore) on the 66-70 mm former, Y on 71-75 mm, X (along B0) on 76-81 mm
+%   Z (bore) on the 66-70 mm former, Y on 71-75 mm, X (along B0) on 76-80 mm
 %Frame of the magnet: B0 along x, bore along z. CoilGen frame: B0 = z_cg,
 %bore = x_cg:  x_magnet = z_cg, y_magnet = -y_cg, z_magnet = x_cg.
 %
@@ -20,7 +20,7 @@ wire_od_14=0.0682*0.0254;
 %       name shape dir      former outer radius
 coils={'Z', 'x', [1;0;0], 0.070; ...
        'Y', 'y', [0;1;0], 0.075; ...
-       'X', 'z', [0;0;1], 0.081};
+       'X', 'z', [0;0;1], 0.080};
 lengths=[0.14:0.02:0.34 0.318 0.324 0.330];   %last three: the maximum length of each former
 
 %target: 1 T/m on the surface of the 120 mm sphere

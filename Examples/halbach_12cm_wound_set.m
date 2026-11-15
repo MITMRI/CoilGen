@@ -1,7 +1,7 @@
 %Wire layouts for the 12 cm Halbach gradient set from the stream functions of
 %halbach_12cm_sf_sweep.m: one layer of round wire in grooves on the outside of
 %the printed formers, 1 mm (or WOUND_CLEARANCE_MM) between wires, 120 mm spherical imaging volume.
-%   Z (bore) on the 66-70 mm former, Y on 71-75 mm, X (along B0) on 76-81 mm
+%   Z (bore) on the 66-70 mm former, Y on 71-75 mm, X (along B0) on 76-80 mm
 %The wire centre sits half a wire diameter below the outer former surface; the
 %wires that cross over the turns go further into the former.
 %CoilGen frame: B0 = z_cg, bore = x_cg (x_magnet = z_cg, y_magnet = -y_cg,
@@ -28,7 +28,7 @@ if ~exist(result_folder,'dir'), mkdir(result_folder); end
 %       name shape dir      former outer radius  lengths [mm]
 coils={'Z', 'x', [1;0;0], 0.070, [340 330]; ...
        'Y', 'y', [0;1;0], 0.075, [300 324]; ...
-       'X', 'z', [0;0;1], 0.081, [320 318]};   %maximum length: Z 330, Y 324, X 318 mm
+       'X', 'z', [0;0;1], 0.080, 318};   %maximum length: Z 330, Y 324, X 318 mm
 limits=[0.05 0.2 1 2 3 5];  %max nonlinearity of the stream function on the 120 mm sphere, %
 
 %copper magnet wire, heavy build (MWS, NEMA MW1000): bare / max outer diameter
