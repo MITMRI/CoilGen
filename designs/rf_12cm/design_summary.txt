@@ -1,38 +1,40 @@
-12 cm Halbach RF solenoid, 12 turns. B0 = 72 mT along x, f0 = 3.0656 MHz. Bore = z.
+12 cm Halbach RF solenoid, 18 turns. B0 = 72 mT along x, f0 = 3.0656 MHz. Bore = z.
 Magnet frame: x = B0, z = bore, theta from +x toward +y. Lengths in mm.
 
 Former: ID 120, OD 130. Litz 1000 x 48 AWG, 2.50 OD, in a groove on the outside, flush:
   turn (centre) radius 63.75, groove depth 2.50 (width ~2.6), 2.50 of plastic under the groove
   min pitch 3.30 (0.8 plastic between grooves); closest wires in the path 3.30
 Turns (z of the ring centre, wound from +z to -z, counter-clockwise seen from +z):
-  66.17 62.87 59.57 56.27 27.14 8.58 -8.58 -27.14 -56.27 -59.57 -62.87 -66.17
-  pitches:  3.30 3.30 3.30 29.13 18.57 17.16 18.57 29.13 3.30 3.30 3.30
-  coil length over the litz 134.8; leads to 70.2 / -70.2
+  70.20 66.90 63.60 60.30 57.00 53.70 30.30 16.78 5.05 -5.05 -16.78 -30.30 -53.70 -57.00 -60.30 -63.60 -66.90 -70.20
+  pitches:  3.30 3.30 3.30 3.30 3.30 23.40 13.52 11.73 10.11 11.73 13.52 23.40 3.30 3.30 3.30 3.30 3.30
+  coil length over the litz 142.9; leads to 74.2 / -74.2
 Jogs: each turn steps to the next across the seam at theta = 90, over 30 deg (33.4 of arc), smooth (raised cosine) in z
-  top lead: the litz starts at theta 105.0, z 70.2 and runs axially to the first ring
-  bottom lead: the litz leaves the last ring at theta 75.0 and runs axially to z -70.2
-Return: the same litz, inside the bore, centre at r 60.00, in a groove 1.25 deep in the inner wall
-  (sticks 1.25 into the bore; 1.25 of plastic between it and the outer grooves), 174 long:
-  hole through the wall at theta 75.0, z -70.2 (end of the bottom lead); inside: along z = -70.2 to theta 90,
-  axially at theta 90 from z -70.2 to 70.2 (under the seam), along z = 70.2 to theta 99.6, out through a hole there
-Port (to the tune/match board): at the +z end, z 70.2, between the litz start (theta 105.0) and the return (theta 99.6)
-Capacitors in the winding (2, each 2 x 1206 in parallel, pocket 3.6 wide x 8.0 long along the wire, ~2.5 deep):
-  C1: theta 147.00 deg, z   27.14
-  C2: theta  68.00 deg, z  -27.14
-  chunk lengths (port -> C1 -> C2 -> return -> port):  1.666 1.531 1.801 m
+  top lead: the litz starts at theta 105.0, z 74.2 and runs axially to the first ring
+  bottom lead: the litz leaves the last ring at theta 75.0 and runs axially to z -74.2
+Return: copper foil 6 wide (2 oz, >= 0.07 thick) insulated with Kapton, 175 long, in a slot whose floor is 2.65 below the OD
+  (0.15 under the groove floor, so the jogs over it stay flush; 2.35 of plastic left inside)
+  bottom tab along z = -74.2 from theta 75.0 (end of the bottom lead) to 90; axial at theta 90 from z -74.2 to 74.2
+  (under the jogs); top tab along z = 74.2 from theta 90 to 99.6 (port)
+Port (to the tune/match board): at the +z end, z 74.2, between the litz start (theta 105.0) and the return (theta 99.6)
+Capacitors in the winding (3, each 2 x 1206 in parallel, stacked, in the groove widened to 1.7 over 8.0 along the wire, ~2.5 deep):
+  C1: theta 322.00 deg, z   57.00
+  C2: theta 168.00 deg, z   -5.05
+  C3: theta  16.00 deg, z  -57.00
+  chunk lengths (port -> C1 -> C2 -> return -> port):  1.848 1.847 1.848 1.848 m
 
 Electrical (unloaded, 20 C, at f0):
-  L 12.95 uH, R 0.226 ohm (litz dc 0.110, litz ac 0.218, return 0.008), Q 1103
-  litz length 4.82 m coil + 0.17 m return
-  B1 (perpendicular to B0) at the centre 64.2 uT per A; 191 uT per sqrt(W) of coil loss
-  tuning: 208 pF in series around the loop in total, split in 3 equal shares of 625 pF:
-    C1 and C2 = 625 pF each (2 x 312 pF 1206), the 3rd share is the port network (tune + match ~ 625 pF)
-    83.1 V peak across each per A peak; with 2 caps in parallel each carries half the current
+  L 26.46 uH, R 0.349 ohm (litz dc 0.164, litz ac 0.340, return 0.009), Q 1462
+  litz length 7.22 m coil + 0.18 m return
+  B1 (perpendicular to B0) at the centre 95.8 uT per A; 229 uT per sqrt(W) of coil loss
+  tuning: 102 pF in series around the loop in total, split in 4 equal shares of 407 pF:
+    C1..C3 in the winding = 407 pF each (2 x 204 pF 1206), the remaining share is the port network (tune + match ~ 407 pF)
+    127.4 V peak across each per A peak; with 2 caps in parallel each carries half the current
 
-B1 uniformity of the real path (coil + return) over a sphere:
+B1 of the real path (coil + return): 96.7 % of the 120 mm sphere volume within +-5 % of the centre, 99.8 % within +-10 %
+Uniformity over a sphere:
   diameter    spread(max-min)/(max+min)   min..max vs centre
-     60          0.46 %                   -0.40 ..  +0.52 %
-     80          0.97 %                   -0.81 ..  +1.14 %
-    100          2.51 %                   -2.18 ..  +2.87 %
-    110          4.59 %                   -4.16 ..  +5.05 %
-    120         95.94 %                  -22.54 .. +3642.67 %
+     80          0.68 %                   -0.68 ..  +0.68 %
+    100          2.31 %                   -2.44 ..  +2.18 %
+    110          4.08 %                   -4.28 ..  +3.87 %
+    116          7.01 %                   -5.74 ..  +8.47 %
+    120         13.06 %                   -7.67 .. +20.08 %

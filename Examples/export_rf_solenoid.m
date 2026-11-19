@@ -11,14 +11,15 @@ end
 addpath(fullfile(pwd,'sub_functions'));
 out=fullfile(pwd,'designs','rf_12cm');
 for d={'figures'}, if ~exist(fullfile(out,d{1}),'dir'), mkdir(fullfile(out,d{1})); end, end
-if ~exist('N','var'), N=12; end
+if ~exist('N','var'), N=18; end
 S=load(fullfile(out,'sweep.mat')); spec=rf_12cm_spec();
 i=find(cellfun(@(d) d.N==N && abs(d.L-0.160)<1e-9,S.designs),1);
 z=S.designs{i}.z;
 
-%return: litz on the inside wall of the former, half buried (centre at r = 60);
-%seam and return at theta = 90 deg, where the return's near field is along B0
-ret_opts={'return_type','bore','return_radius',0.060,'seam_deg',90};
+%return: copper foil under the groove floor, under the seam (the 120 mm sphere
+%touches the inner wall, so nothing can go in the bore); seam and return at
+%theta = 90 deg, where the return's near field is mostly along B0
+ret_opts={'return_type','strip','seam_deg',90,'pocket_halfwidth_mm',0.85}; %caps stacked: 1.6 wide, fits the groove
 %widen the jogs until neighbouring wires keep the minimum pitch everywhere
 for jog_deg=30:5:90
 g=build_rf_solenoid_path(z,spec,'jog_deg',jog_deg,ret_opts{:});
@@ -79,12 +80,17 @@ fprintf(fid,'  hole through the wall at theta %.1f, z %.1f (end of the bottom le
 fprintf(fid,'  axially at theta %.0f from z %.1f to %.1f (under the seam), along z = %.1f to theta %.1f, out through a hole there\n', ...
     d360(g.seam_theta),g.z_bottom*1e3,g.z_top*1e3,g.z_top*1e3,d360(g.feed_theta(1)));
 else
-fprintf(fid,'Return: copper foil %.0f wide (2 oz), in a slot 0.15 under the groove floor at theta %.0f, with tabs at both ends\n', ...
-    g.options.strip_width_mm,d360(g.seam_theta));
+fprintf(fid,'Return: copper foil %.0f wide (2 oz, >= 0.07 thick) insulated with Kapton, %.0f long, in a slot whose floor is %.2f below the OD\n', ...
+    g.options.strip_width_mm,g.strip_length*1e3,spec.litz_od*1e3+0.15);
+fprintf(fid,'  (0.15 under the groove floor, so the jogs over it stay flush; %.2f of plastic left inside)\n', ...
+    (spec.former_od-spec.former_id)/2*1e3-spec.litz_od*1e3-0.15);
+fprintf(fid,'  bottom tab along z = %.1f from theta %.1f (end of the bottom lead) to %.0f; axial at theta %.0f from z %.1f to %.1f\n', ...
+    g.z_bottom*1e3,d360(g.strip_theta_end),d360(g.seam_theta),d360(g.seam_theta),g.z_bottom*1e3,g.z_top*1e3);
+fprintf(fid,'  (under the jogs); top tab along z = %.1f from theta %.0f to %.1f (port)\n',g.z_top*1e3,d360(g.seam_theta),d360(g.feed_theta(1)));
 end
 fprintf(fid,'Port (to the tune/match board): at the +z end, z %.1f, between the litz start (theta %.1f) and the return (theta %.1f)\n', ...
     g.z_top*1e3,d360(g.feed_theta(2)),d360(g.feed_theta(1)));
-fprintf(fid,'Capacitors in the winding (%d, each 2 x 1206 in parallel, pocket %.1f wide x %.1f long along the wire, ~%.1f deep):\n', ...
+fprintf(fid,'Capacitors in the winding (%d, each 2 x 1206 in parallel, stacked, in the groove widened to %.1f over %.1f along the wire, ~%.1f deep):\n', ...
     nc,2*g.options.pocket_halfwidth_mm,2*g.options.pocket_halflength_mm,spec.litz_od*1e3);
 for k=1:nc
 fprintf(fid,'  C%d: theta %6.2f deg, z %7.2f\n',k,d360(g.break_theta(ic(k))),g.break_z(ic(k))*1e3);
@@ -97,9 +103,11 @@ fprintf(fid,'  litz length %.2f m coil + %.2f m return\n',g.litz_length,g.strip_
 fprintf(fid,'  B1 (perpendicular to B0) at the centre %.1f uT per A; %.0f uT per sqrt(W) of coil loss\n', ...
     r.B1_centre_T_per_A*1e6,r.B1_uT_per_sqrtW);
 fprintf(fid,'  tuning: %.0f pF in series around the loop in total, split in %d equal shares of %.0f pF:\n',r.C_total_F*1e12,nb,C);
-fprintf(fid,'    C1 and C2 = %.0f pF each (2 x %.0f pF 1206), the 3rd share is the port network (tune + match ~ %.0f pF)\n',C,C/2,C);
+fprintf(fid,'    C1..C%d in the winding = %.0f pF each (2 x %.0f pF 1206), the remaining share is the port network (tune + match ~ %.0f pF)\n',nc,C,C/2,C);
 fprintf(fid,'    %.1f V peak across each per A peak; with 2 caps in parallel each carries half the current\n',r.V_break_per_A);
-fprintf(fid,'\nB1 uniformity of the real path (coil + return) over a sphere:\n');
+fprintf(fid,'\nB1 of the real path (coil + return): %.1f %% of the 120 mm sphere volume within +-5 %% of the centre, %.1f %% within +-10 %%\n', ...
+    r.vol_within_5*100,r.vol_within_10*100);
+fprintf(fid,'Uniformity over a sphere:\n');
 fprintf(fid,'  diameter    spread(max-min)/(max+min)   min..max vs centre\n');
 for k=1:numel(r.sphere_d)
 fprintf(fid,'  %5.0f        %6.2f %%                  %+6.2f .. %+6.2f %%\n',r.sphere_d(k)*1e3,r.spread(k)*100,r.dev_min(k)*100,r.dev_max(k)*100);
@@ -117,7 +125,7 @@ br=find(abs(diff(tt))>pi);
 xs=s_arc(tt); xs(br+1)=nan;                       %do not join across the cut
 hold on
 patch([-pi pi pi -pi]*a1,[-1 -1 1 1]*spec.roi_radius*1e3,[0.85 0.93 1],'EdgeColor','none');
-text(-pi*a1+5,spec.roi_radius*1e3-5,'110 mm sphere (axial extent)','Color',[0.3 0.4 0.7]);
+text(-pi*a1+5,-spec.roi_radius*1e3+12,sprintf('%.0f mm sphere (axial extent)',2*spec.roi_radius*1e3),'Color',[0.3 0.4 0.7]);
 rt=rel(atan2(g.strip_centre(2,:),g.strip_centre(1,:)));
 plot(s_arc(rt),g.strip_centre(3,:)*1e3,'k-','LineWidth',3);
 plot(xs,g.z*1e3,'Color',[0.8 0.45 0.1],'LineWidth',2);
@@ -129,7 +137,7 @@ plot(s_arc(pf),g.z_top*1e3,'o','MarkerSize',10,'MarkerFaceColor','g','MarkerEdge
 text(s_arc(pf)+4,g.z_top*1e3+4,'port','FontWeight','bold');
 axis equal; xlim([-pi pi]*a1); grid on
 xlabel(sprintf('arc length at r = %.2f mm from the seam (theta = %.0f deg), mm',a1,d360(g.seam_theta))); ylabel('z (bore), mm');
-title(sprintf('RF solenoid, %d turns of %.1f mm litz, unrolled (orange: litz, black: return inside the bore, yellow: caps, green: port)',N,spec.litz_od*1e3));
+title(sprintf('RF solenoid, %d turns of %.1f mm litz, unrolled (orange: litz, black: return foil under the seam, yellow: caps, green: port)',N,spec.litz_od*1e3));
 exportgraphics(f,fullfile(out,'figures','unrolled.png'),'Resolution',150); close(f);
 
 %B1 maps in the planes through the axis: x-z (along B0) and y-z, wires to scale
@@ -154,7 +162,7 @@ b(abs(u)>spec.former_od/2)=nan;
 subplot(1,2,k);
 contourf(u*1e3,v*1e3,(b-1)*100,[-20 -10 -5 -2 -1 1 2 5 10 20],'ShowText','on'); hold on
 caxis([-10 10]); colormap(gca,turbo); colorbar
-t=linspace(0,2*pi,200); plot(55*cos(t),55*sin(t),'k--',60*cos(t),60*sin(t),'k:');
+t=linspace(0,2*pi,200); plot(55*cos(t),55*sin(t),'k:',60*cos(t),60*sin(t),'k--');
 %former wall
 for sgn=[-1 1]
 patch(sgn*[spec.former_id spec.former_od spec.former_od spec.former_id]*500,[-1 -1 1 1]*g.z_top*1e3*1.08, ...
@@ -163,21 +171,24 @@ end
 %wire cross-sections: where the path crosses the plane (circles), or runs in it (bars)
 c=k; o=3-k;                                       %coordinate normal to the plane, in-plane one
 W=allw*1e3; 
-cr=find(sign(W(o,1:end-1))~=sign(W(o,2:end)) & abs(W(o,1:end-1)-W(o,2:end))<5);
+sg=sign(W(o,:)+1e-9);                            %points exactly on the plane count as one side
+cr=find(sg(1:end-1)~=sg(2:end) & abs(W(o,1:end-1)-W(o,2:end))<5);
 for j=cr
 s=W(o,j)/(W(o,j)-W(o,j+1)); q=W(:,j)+s*(W(:,j+1)-W(:,j));
 rectangle('Position',[q(c)-rw q(3)-rw 2*rw 2*rw],'Curvature',[1 1],'FaceColor',[0.85 0.5 0.15],'EdgeColor','k');
 end
-inpl=abs(W(o,:))<1e-3;
+Wr=densify(g.strip_centre,0.0003)*1e3;           %only the return can lie in a plane
+inpl=abs(Wr(o,:))<1e-3 & abs(diff([Wr(3,1) Wr(3,:)]))>0;
 if any(inpl)
-qi=W(:,inpl);
+qi=Wr(:,inpl);
 for sgn=unique(sign(qi(c,:)))
 qq=qi(:,sign(qi(c,:))==sgn);
-rectangle('Position',[mean(qq(c,:))-rw min(qq(3,:))-rw 2*rw max(qq(3,:))-min(qq(3,:))+2*rw],'FaceColor',[0.85 0.5 0.15],'EdgeColor','k');
+wr=rw; if ~bore, wr=0.15; end                 %foil seen edge-on
+rectangle('Position',[mean(qq(c,:))-wr min(qq(3,:))-wr 2*wr max(qq(3,:))-min(qq(3,:))+2*wr],'FaceColor','k','EdgeColor','k');
 end
 end
 axis equal; xlim([-68 68]); ylim([-90 90]); xlabel('mm'); ylabel('z, mm');
-title({['B1 deviation from centre, %, ' names_pl{k}],'dashed 110 mm, dotted 120 mm sphere; litz to scale, grey = former'});
+title({['B1 deviation from centre, %, ' names_pl{k}],'dashed 120 mm, dotted 110 mm sphere; litz to scale, grey = former'});
 end
 exportgraphics(f,fullfile(out,'figures','B1_maps.png'),'Resolution',200); close(f);
 fprintf('closest wires %.2f mm (jog %d deg)\n',dmin*1e3,jog_deg);

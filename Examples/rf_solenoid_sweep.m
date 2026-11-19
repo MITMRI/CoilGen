@@ -15,7 +15,7 @@ out=fullfile(pwd,'designs','rf_12cm'); if ~exist(out,'dir'), mkdir(out); end
 spec=rf_12cm_spec();
 Ns=4:30;
 lengths=[0.100 0.120 0.140 0.160];
-eval_d=[0.080 0.100 0.110 0.120];
+eval_d=[0.100 0.110 0.116 0.120];
 
 rows=[];
 designs={};

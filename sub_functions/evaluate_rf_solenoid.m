@@ -13,7 +13,7 @@ A=[A; f(:,1:end-1)']; B=[B; f(:,2:end)']; I=[I; ones(size(f,2)-1,1)/numel(g.stri
 end
 B0=biot_savart(A,B,I,[0 0 0]);
 r.B1_centre_T_per_A=hypot(B0(2),B0(3));
-d=[0.060 0.080 0.100 0.110 0.120];
+d=[0.080 0.100 0.110 0.116 0.120];
 r.sphere_d=d; r.spread=zeros(size(d)); r.dev_min=r.spread; r.dev_max=r.spread;
 for i=1:numel(d)
 P=sphere_points(d(i)/2);
@@ -22,6 +22,12 @@ b=hypot(Bp(:,2),Bp(:,3));                       %perpendicular to B0 (x)
 r.spread(i)=(max(b)-min(b))/(max(b)+min(b));
 r.dev_min(i)=min(b)/r.B1_centre_T_per_A-1; r.dev_max(i)=max(b)/r.B1_centre_T_per_A-1;
 end
+
+%share of the volume of the largest sphere within +-5 % and +-10 % of the centre
+R=d(end)/2; [gx,gy,gz]=ndgrid(linspace(-R,R,41));
+Pv=[gx(:) gy(:) gz(:)]; Pv=Pv(vecnorm(Pv,2,2)<=R,:);
+Bv=biot_savart(A,B,I,Pv); bv=hypot(Bv(:,2),Bv(:,3))/r.B1_centre_T_per_A-1;
+r.vol_within_5=mean(abs(bv)<=0.05); r.vol_within_10=mean(abs(bv)<=0.10);
 
 %--- inductance of the closed loop: litz as a round 2.5 mm conductor, strip as
 %its centreline with the same radius (a small part of the total) ---

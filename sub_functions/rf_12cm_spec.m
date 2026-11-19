@@ -9,6 +9,6 @@ spec.litz_strand_radius=0.0315e-3/2;    %48 AWG bare
 spec.litz_lay_factor=1.03;
 spec.a=spec.former_od/2-spec.litz_od/2; %turn radius: litz flush with the outer surface
 spec.pitch_min=spec.litz_od+0.0008;     %0.8 mm plastic between turns
-spec.roi_radius=0.055;                  %optimise B1 over a 110 mm sphere
-spec.num_breaks=3;                      %capacitor breaks (2 x 1206 in parallel each)
+spec.roi_radius=0.060;                  %optimise B1 over the 120 mm imaging sphere (touches the inner wall)
+spec.num_breaks=4;                      %equal shares of the loop: the port network + 3 caps in the winding (2 x 1206 in parallel each)
 end
